@@ -21,3 +21,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('me', [AuthController::class,'me']);
 
 });
+
+Route::get('/test', function () {
+    return response()->json(['message' => 'Hello API']);
+});
