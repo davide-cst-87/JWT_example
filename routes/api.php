@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
+use App\Http\Controllers\ScanController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,3 +27,6 @@ Route::middleware(['auth:api'])->group(function () {
 Route::get('/test', function () {
     return response()->json(['message' => 'Hello API']);
 });
+
+
+Route::post('/log-scan', [ScanController::class, 'store']);
