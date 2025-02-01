@@ -78,8 +78,18 @@ class AuthController extends Controller
     public function me()
     {
         // return response()->json(auth()->user());
-        $user = auth()->user()->load('company'); // Eager load company details
-        return response()->json($user);
+        // $user = auth()->user()->load('company'); // Eager load company details
+        // return response()->json($user);
+        $user = auth()->user()->load('roles'); // Load only user's roles
+
+    return response()->json([
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'account_type' => $user->account_type,
+        'company_id' => $user->company_id, // If the user is part of a company
+        'roles' => $user->roles->pluck('name') // Return the user's assigned role(s)
+    ]);
     }
 
 
