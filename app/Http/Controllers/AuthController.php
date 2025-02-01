@@ -7,18 +7,56 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Company;
+
 
 class AuthController extends Controller
 {
+    // public function register(UserRegisterRequest $request)
+    // {
+    //     $validatedData = $request->validated();
+
+    //     $user = User::create([
+    //         'name' => $validatedData['name'],
+    //         'email' => $validatedData['email'],
+    //         'password' => bcrypt($validatedData['password']),
+    //     ]);
+    //     $token = auth('api')->login($user);
+    //     return $this->respondWithToken($token);
+    // }
     public function register(UserRegisterRequest $request)
     {
         $validatedData = $request->validated();
-
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
-        ]);
+        \Log::info('Registering user', $validatedData);
+    
+        if ($validatedData['account_type'] === 'company') {
+            // Create the company
+            $company = Company::create([
+                'name' => $validatedData['company_name']
+            ]);
+    
+            // Create user as company admin and explicitly set account_type
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']),
+                'account_type' => 'company',  // 🔹 Explicitly set account_type
+                'company_id' => $company->id,  // 🔹 Ensure company_id is set
+            ]);
+    
+            $user->assignRole('company-admin'); // Assign role
+        } else {
+            // Create normal user
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']),
+                'account_type' => 'single',  // 🔹 Explicitly set account_type
+            ]);
+    
+            $user->assignRole('user'); // Assign role
+        }
+        \Log::info('User created:', $user->toArray());
         $token = auth('api')->login($user);
         return $this->respondWithToken($token);
     }
@@ -39,7 +77,9 @@ class AuthController extends Controller
 
     public function me()
     {
-        return response()->json(auth()->user());
+        // return response()->json(auth()->user());
+        $user = auth()->user()->load('company'); // Eager load company details
+        return response()->json($user);
     }
 
 
