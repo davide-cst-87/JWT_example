@@ -25,3 +25,10 @@ Route::middleware(['auth:api'])->group(function () {
 Route::get('/test', function () {
     return response()->json(['message' => 'Hello API']);
 });
+use App\Mail\TestEmail;
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/send-test-email', function () {
+    Mail::to('castelli1987.dc@gmail.com')->send(new TestEmail());
+    return 'Test email sent!';
+});
