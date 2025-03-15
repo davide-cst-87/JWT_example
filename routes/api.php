@@ -43,7 +43,8 @@ Route::get('/send-test-email', function () {
 Route::post('/auth/register-from-invitation', [AuthController::class, 'registerFromInvitation']);
 
 // 🔹 Send invitation (only for company-admins)
-Route::post('/invite', [InviteController::class, 'sendInvitation']);
+// Route::post('/invite', [InviteController::class, 'sendInvitation']);
+Route::middleware(['auth:api'])->post('/invite', [InviteController::class, 'sendInvitation']);
 
 // 🔹 Check if an invitation is valid
 Route::get('/invited/{token}', [InviteController::class, 'checkInvitation']);
