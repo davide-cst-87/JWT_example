@@ -14,7 +14,7 @@ class InviteController extends Controller
 {
     public function sendInvitation(Request $request)
     {
-76    $user = Auth::user(); // This gets the logged-in user
+    $user = Auth::user(); // This gets the logged-in user
         if (!$user) {
             return response()->json(['error' => 'User not authenticated. Please send a valid token.'], 401);
         }
