@@ -127,19 +127,46 @@ class AuthController extends Controller
     ]);
     }
 
+// THIS IS COMMENT OUT FOR TESTING PURPOSE 
+// THIS IS NOT WORKING PROPELERLY BECASUE HANDLE PROPERLY THE SESSION BUT NOT THE TOKEN BASED ( STATELESS)
+    // public function logout()
+    // {
+    //     auth()->logout();
+
+    //     return response()->json(['message' => 'Successfully logged out']);
+    // }
 
     public function logout()
-    {
-        auth()->logout();
-
+{
+    try {
+        auth('api')->invalidate(true); // Blacklists the token
         return response()->json(['message' => 'Successfully logged out']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to log out'], 500);
     }
+}
 
+//  this is the old refresh but is better handle better the expections
+
+    // public function refresh()
+    // {
+    //     return $this->respondWithToken(auth('api')->refresh());
+        
+    // }
 
     public function refresh()
-    {
+{
+    try {
         return $this->respondWithToken(auth('api')->refresh());
+    } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+        return response()->json(['error' => 'Token expired. Please log in again.'], 401);
+    } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+        return response()->json(['error' => 'Invalid token.'], 401);
+    } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+        return response()->json(['error' => 'Could not refresh token. Please log in again.'], 401);
     }
+}
+
 
 
     protected function respondWithToken($token)
