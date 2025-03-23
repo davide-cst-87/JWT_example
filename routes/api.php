@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InviteController;
 
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\AdminUserController;
 
 use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Mail;
@@ -30,7 +31,15 @@ Route::middleware(['auth:api'])->group(function () {
     // User Controller 
     Route::get('/user', [UserController::class, 'show']);
     Route::patch('/user', [UserController::class, 'update']);
+
+    Route::apiResource('users', AdminUserController::class);
+
 });
+
+// TODO 
+// Route::middleware(['auth:api', 'role:admin'])->prefix('admin')->group(function () {
+//     Route::apiResource('users', AdminUserController::class);
+// });
 
 
 // 🔹 Invitation-based registration (for invited users)
