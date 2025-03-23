@@ -26,7 +26,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class,'logout']);
     Route::post('refresh', [AuthController::class,'refresh']);
     Route::post('me', [AuthController::class,'me']);
+
+    // User Controller 
     Route::get('/user', [UserController::class, 'show']);
+    Route::patch('/user', [UserController::class, 'update']);
 });
 
 
