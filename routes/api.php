@@ -32,7 +32,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/user', [UserController::class, 'show']);
     Route::patch('/user', [UserController::class, 'update']);
 
+    // Admin Controller
     Route::apiResource('users', AdminUserController::class);
+    Route::patch('users/{id}/block', [AdminUserController::class, 'block']);
+    Route::patch('users/{id}/unblock', [AdminUserController::class, 'unblock']);
 
 });
 

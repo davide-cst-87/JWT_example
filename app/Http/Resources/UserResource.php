@@ -26,6 +26,7 @@ class UserResource extends JsonResource
                 'blocked'      => $this->blocked ?? false,
                 'created_at'   => $this->created_at?->toDateTimeString(),
                 'updated_at'   => $this->updated_at?->toDateTimeString(),
+                'is_blocked' => $this->is_blocked, 
             ];
         }
         
