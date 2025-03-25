@@ -98,7 +98,19 @@ class AdminUserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $admin = Auth::user();
+
+        $user = User::where('id', $id)
+            ->where('company_id', $admin->company_id)
+            ->first();
+
+        if (! $user) {
+            return response()->json(['message' => 'User not found or not in your company.'], 404);
+        }
+
+        $user->delete(); // Soft delete
+
+        return response()->json(['message' => 'User has been deleted.']);
     }
 
     /**
@@ -151,5 +163,26 @@ class AdminUserController extends Controller
             'message' => 'User has been successfully unblocked.',
             'user' => new UserResource($user->fresh('roles', 'company')),
         ]);
+    }
+
+    /**
+     * Restore the specified user from the soft delete
+     */
+    public function restore(string $id)
+    {
+        $admin = Auth::user();
+
+        $user = User::withTrashed()
+            ->where('id', $id)
+            ->where('company_id', $admin->company_id)
+            ->first();
+
+        if (! $user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        $user->restore();
+
+        return response()->json(['message' => 'User has been restored.']);
     }
 }
