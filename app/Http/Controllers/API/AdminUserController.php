@@ -25,14 +25,6 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(string $id)
@@ -74,7 +66,7 @@ class AdminUserController extends Controller
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|max:255|unique:users,email,'.$user->id,
             'role' => 'sometimes|string|exists:roles,name',
-            // 'badge_id' => 'sometimes|string|max:100',
+            'badge_id' => 'sometimes|string|max:100',
         ]);
 
         // 🔹 Update allowed fields (excluding role)

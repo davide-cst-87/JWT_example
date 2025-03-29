@@ -4,17 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles,SoftDeletes;
+    use HasFactory, HasRoles, Notifiable,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -23,10 +22,14 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'surname',
         'email',
         'password',
-        'account_type',  
-        'company_id'      
+        'account_type',
+        'company_id',
+        'phone_number',
+        'badge_id',
+        'image',
     ];
 
     /**
@@ -52,6 +55,7 @@ class User extends Authenticatable implements JWTSubject
             'is_blocked' => 'boolean',
         ];
     }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -66,8 +70,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
     public function company()
-{
-    return $this->belongsTo(Company::class);
-}
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

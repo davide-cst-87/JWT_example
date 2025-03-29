@@ -25,7 +25,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     // User Controller
     Route::get('/user', [UserController::class, 'show']);
-    Route::patch('/user', [UserController::class, 'update']);
+    Route::post('/user', [UserController::class, 'update']);
 
     // Admin Controller
     Route::apiResource('users', AdminUserController::class);
