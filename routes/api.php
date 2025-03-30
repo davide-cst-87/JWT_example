@@ -1,18 +1,11 @@
 <?php
 
-
 use App\Http\Controllers\API\AdminUserController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InviteController;
-use App\Mail\TestEmail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\ScanController;
-use Illuminate\Http\Request;
-
-use App\Mail\TestEmail;
+use Illuminate\Support\Facades\Route;
 
 // TESTING
 Route::get('/test', function () {
@@ -46,18 +39,6 @@ Route::middleware(['auth:api'])->group(function () {
 //     Route::apiResource('users', AdminUserController::class);
 // });
 
-
-
-
-Route::post('/log-scan', [ScanController::class, 'store']);
-
-
-Route::get('/send-test-email', function () {
-    Mail::to('castelli1987.dc@gmail.com')->send(new TestEmail);
-    return 'Test email sent!';
-});
-
-
 // 🔹 Invitation-based registration (for invited users)
 Route::post('/auth/register-from-invitation', [AuthController::class, 'registerFromInvitation']);
 
@@ -68,10 +49,5 @@ Route::middleware(['auth:api'])->post('/invite', [InviteController::class, 'send
 // 🔹 Check if an invitation is valid
 Route::get('/invited/{token}', [InviteController::class, 'checkInvitation']);
 
-
-// BELOW should be a test Remove as soon as possible
-Route::get('/send-test-email', function () {
-    Mail::to('castelli1987.dc@gmail.com')->send(new TestEmail);
-    return 'Test email sent!';
-});
-
+// HTTP Request from NodeMCU
+Route::post('/log-scan', [ScanController::class, 'store']);

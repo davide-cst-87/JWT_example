@@ -64,6 +64,7 @@ class AdminUserController extends Controller
         // ✅ Only validate fields the admin is allowed to edit
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
+            'surname' => 'sometimes|nullable|string|max:255',
             'email' => 'sometimes|email|max:255|unique:users,email,'.$user->id,
             'role' => 'sometimes|string|exists:roles,name',
             'badge_id' => 'sometimes|string|max:100',
