@@ -49,6 +49,7 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -63,8 +64,16 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+
+    public function scans()
+    {
+        return $this->hasMany(Scan::class);
+    }
+
     public function company()
 {
     return $this->belongsTo(Company::class);
 }
+
 }

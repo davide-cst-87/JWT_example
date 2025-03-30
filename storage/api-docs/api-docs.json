@@ -1,0 +1,84 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ETL System API",
+        "description": "This is the API documentation for ETL System REST API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local API Server"
+        }
+    ],
+    "paths": {
+        "/api/log-scan": {
+            "post": {
+                "tags": [
+                    "Scans"
+                ],
+                "summary": "Log a scan (entrance or exit)",
+                "operationId": "d5ee2a2e39509efd3928b65c367e819d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "badge_id",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "badge_id": {
+                                        "type": "string",
+                                        "example": "ABC123"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "entrance",
+                                            "exit"
+                                        ],
+                                        "example": "entrance"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Came in late"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Scan logged successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scan logged successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Scans",
+            "description": "Scans"
+        }
+    ]
+}
