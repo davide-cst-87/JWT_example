@@ -13,7 +13,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
+
     use HasFactory, HasRoles, Notifiable,SoftDeletes;
+
 
     /**
      * The attributes that are mass assignable.
@@ -27,9 +29,11 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'account_type',
         'company_id',
+
         'phone_number',
         'badge_id',
         'image',
+
     ];
 
     /**
@@ -70,6 +74,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+
+    public function scans()
+    {
+        return $this->hasMany(Scan::class);
+    }
+
 
     public function company()
     {
