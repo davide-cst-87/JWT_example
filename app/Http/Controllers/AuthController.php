@@ -105,7 +105,17 @@ class AuthController extends Controller
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+        // This is a different way to login in terms of syntax but is forcing to use the guard api
+        $user = auth('api')->user();
 
+        if ($user->is_blocked) {
+        // Logout immediately to invalidate token
+        auth('api')->logout();
+
+        return response()->json([
+            'message' => 'Your account has been blocked. Please contact your administrator.'
+        ], 403);
+    }
         return $this->respondWithToken($token);
     }
 
