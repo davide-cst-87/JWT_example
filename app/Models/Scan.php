@@ -9,5 +9,15 @@ class Scan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['badge_id', 'timestamp'];
+    protected $fillable = [
+        'badge_id',
+        'user_id',
+        'type',
+        'notes',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
