@@ -32,6 +32,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::patch('users/{id}/unblock', [AdminUserController::class, 'unblock']);
     // The restore endpoint is used to recover an user that was deleted
     Route::patch('/users/{id}/restore', [AdminUserController::class, 'restore']);
+
+    Route::get('/user/my-scan', [ScanController::class, 'index']);
 });
 
 // TODO

@@ -12,13 +12,106 @@
         }
     ],
     "paths": {
+        "/api/user/my-scan": {
+            "get": {
+                "tags": [
+                    "Scans"
+                ],
+                "summary": "Get authenticated user's scans (entrance or exit)",
+                "operationId": "3926df16029a5b8942ee9c7c83ff8ff3",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by scan type (entrance or exit)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "entrance",
+                                "exit"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Start date for filtering (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "End date for filtering (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scans retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved"
+                                        },
+                                        "scans": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Scan"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/log-scan": {
             "post": {
                 "tags": [
                     "Scans"
                 ],
                 "summary": "Log a scan (entrance or exit)",
-                "operationId": "d5ee2a2e39509efd3928b65c367e819d",
+                "operationId": "e870b402e1ec7e4e0b69890ead68220a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -72,6 +165,68 @@
                         "description": "Validation error"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Scan": {
+                "title": "Scan",
+                "description": "Represents a user scan event",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "badge_id": {
+                        "type": "string",
+                        "example": "ABC123XYZ"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "entrance",
+                            "exit"
+                        ],
+                        "example": "entrance"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Came in late",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-01T09:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-01T09:05:00Z"
+                    },
+                    "user": {
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "Mario"
+                            },
+                            "surname": {
+                                "type": "string",
+                                "example": "Rossi"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
