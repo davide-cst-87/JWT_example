@@ -105,6 +105,59 @@
                 ]
             }
         },
+        "/api/user/my-scan/{id}": {
+            "get": {
+                "tags": [
+                    "Scans"
+                ],
+                "summary": "Get a specific scan by ID (only if owned by the authenticated user)",
+                "operationId": "e20bff4c452a285db047c1892ff4df80",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the scan to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scan retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved"
+                                        },
+                                        "scan": {
+                                            "$ref": "#/components/schemas/Scan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Scan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/log-scan": {
             "post": {
                 "tags": [
@@ -198,15 +251,14 @@
                     "created_at": {
                         "type": "string",
                         "format": "date-time",
-                        "example": "2025-04-01T09:00:00Z"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-04-01T09:05:00Z"
+                        "example": "2025-03-30 00:51:44"
                     },
                     "user": {
                         "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "41"
+                            },
                             "name": {
                                 "type": "string",
                                 "example": "Mario"

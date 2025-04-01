@@ -64,4 +64,27 @@ class ScanController extends Controller
             'scans' => ScanResource::collection($scans),
         ]);
     }
+
+    public function show(string $id)
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $scan = Scan::where('id', $id)
+            ->where('user_id', $user->id)
+            ->with(['user:id,name,surname'])
+            ->first();
+
+        if (! $scan) {
+            return response()->json(['message' => 'Scan not found'], 404);
+        }
+
+        return response()->json([
+            'message' => 'Data retrieved',
+            'scan' => new ScanResource($scan),
+        ]);
+    }
 }

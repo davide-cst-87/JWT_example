@@ -34,6 +34,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::patch('/users/{id}/restore', [AdminUserController::class, 'restore']);
 
     Route::get('/user/my-scan', [ScanController::class, 'index']);
+    Route::get('/user/my-scan/{id}', [ScanController::class, 'show']);
 });
 
 // TODO
