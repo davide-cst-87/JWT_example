@@ -59,9 +59,9 @@ class ScanController extends Controller
 
         $scans = $query->latest()->paginate(10);
 
-        return response()->json([
-            'message' => 'Data retrieved',
-            'scans' => ScanResource::collection($scans),
+        // TODO Remember the colletrion should NOT be wrapped on response()=>json([...])
+        return ScanResource::collection($scans)->additional([
+            'message' => 'Scans retrieved successfully.',
         ]);
     }
 

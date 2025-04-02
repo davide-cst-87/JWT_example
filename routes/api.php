@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminScanController;
 use App\Http\Controllers\API\AdminUserController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AuthController;
@@ -33,11 +34,16 @@ Route::middleware(['auth:api'])->group(function () {
     // The restore endpoint is used to recover an user that was deleted
     Route::patch('/users/{id}/restore', [AdminUserController::class, 'restore']);
 
+    // User Scan Controller
     Route::get('/user/my-scan', [ScanController::class, 'index']);
     Route::get('/user/my-scan/{id}', [ScanController::class, 'show']);
+
+    // Admin Scan Controller
+    Route::apiResource('admin/scans', AdminScanController::class);
+
 });
 
-// TODO
+// TODO Implement the role admin to have a better security
 // Route::middleware(['auth:api', 'role:admin'])->prefix('admin')->group(function () {
 //     Route::apiResource('users', AdminUserController::class);
 // });
