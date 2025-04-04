@@ -84,9 +84,25 @@ class AdminScanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $scan = Scan::find($id);
+
+        if (! $scan) {
+            return response()->json(['message' => 'Scan not found.'], 404);
+        }
+
+        $response = $this->authorizeScan($scan);
+
+        if ($response) {
+            return $response;
+        }
+
+        $scan->delete();
+
+        // TODO choose which one fits best and change the docs if needed
+        // return new ScanResource($scan)->additional(['message' => 'Scan deleted successfully']);
+        return response()->json(['message' => 'Scan deleted successfully']);
     }
 
     // This is an helper function that is used to authorize the scan
