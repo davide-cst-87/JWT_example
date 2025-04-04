@@ -216,6 +216,138 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "patch": {
+                "tags": [
+                    "Admin Scans"
+                ],
+                "summary": "Update a scan's type or notes (only allowed fields are accepted)",
+                "operationId": "1e2347fc63ce3944a3492e8a69f95bc0",
+                "parameters": [
+                    {
+                        "name": "scan",
+                        "in": "path",
+                        "description": "ID of the scan to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 83
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "entrance",
+                                            "exit"
+                                        ],
+                                        "example": "exit"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Modified by admin",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Scan modified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 83
+                                                },
+                                                "badge_id": {
+                                                    "type": "string",
+                                                    "example": "85bdb85"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "exit"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Modified by admin"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-03-30 00:51:44"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 41
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Davide2.0"
+                                                        },
+                                                        "surname": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scan modified successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden – scan does not belong to admin's company"
+                    },
+                    "422": {
+                        "description": "Validation error – invalid or unexpected fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid fields provided: badge_id"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/user/my-scan": {

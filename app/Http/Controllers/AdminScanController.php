@@ -52,9 +52,33 @@ class AdminScanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Scan $scan)
     {
-        //
+        $response = $this->authorizeScan($scan);
+        if ($response) {
+            return $response;
+        }
+
+        // This is checking and blocing to return status 200 even if the body sent is not allowed to change
+        $allowedFields = ['type', 'notes'];
+        $unknownFields = collect($request->all())->keys()->diff($allowedFields);
+
+        if ($unknownFields->isNotEmpty()) {
+            return response()->json([
+                'message' => 'Invalid fields provided: '.$unknownFields->implode(', '),
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'type' => 'nullable|in:entrance,exit',
+            'notes' => 'nullable|string|max:255',
+        ]);
+
+        $scan->update($validated);
+
+        $scan->refresh();
+
+        return new ScanResource($scan)->additional(['message' => 'Scan modified successfully']);
     }
 
     /**
@@ -75,7 +99,9 @@ class AdminScanController extends Controller
         }
 
         if ($scan->user->company_id !== $admin->company_id) {
-            abort(403, 'Forbidden.');
+            return response()->json([
+                'message' => 'You do not have permission to access this scan.',
+            ], 403);
         }
     }
 }
