@@ -15,6 +15,11 @@ class AdminScanController extends Controller
     public function index()
     {
         $admin = Auth::user();
+
+        if (! $admin) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
         // This code below is needed to filter based on the user that has the same
         // company_id as the company that the admin is
         $scans = Scan::whereHas('user', function ($query) use ($admin) {
@@ -32,17 +37,16 @@ class AdminScanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Scan $scan)
     {
-        //
+        $this->authorizeScan($scan);
+
+        return new ScanResource($scan)->additional(['message' => 'Scan retrieved successfully']);
     }
 
     /**
@@ -59,5 +63,19 @@ class AdminScanController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    // This is an helper function that is used to authorize the scan
+    private function authorizeScan(Scan $scan)
+    {
+        $admin = Auth::user();
+
+        if (! $admin) {
+            abort(401, 'Unauthenticated.');
+        }
+
+        if ($scan->user->company_id !== $admin->company_id) {
+            abort(403, 'Forbidden.');
+        }
     }
 }
