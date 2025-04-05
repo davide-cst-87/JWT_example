@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ScanResource;
 use App\Models\Scan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,7 +38,30 @@ class AdminScanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'type' => 'required|in:entrance,exit',
+            'notes' => 'required|string|max:255',
+        ]);
+
+        $admin = Auth::user();
+        $targetUser = User::findOrFail($request->user_id);
+
+        if ($targetUser->company_id !== $admin->company_id) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
+        $scan = Scan::create([
+            'user_id' => $targetUser->id,
+            'type' => $request->type,
+            'notes' => $request->notes,
+            'badge_id' => $targetUser->badge_id, // optional
+        ]);
+
+        return new ScanResource($scan)->additional(['message' => 'Scan created successfully.']);
+    }
 
     /**
      * Display the specified resource.
