@@ -12,13 +12,701 @@
         }
     ],
     "paths": {
+        "/api/admin/scans/{scan}": {
+            "get": {
+                "tags": [
+                    "Admin Scans"
+                ],
+                "summary": "Get a specific scan by ID (only within the admin's company)",
+                "operationId": "91b71b3f99183cb0e49bc0f428e18fe0",
+                "parameters": [
+                    {
+                        "name": "scan",
+                        "in": "path",
+                        "description": "ID of the scan to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 83
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scan retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 83
+                                                },
+                                                "badge_id": {
+                                                    "type": "string",
+                                                    "example": "85bdb85"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "entrance"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-03-30 00:51:44"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 41
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Davide2.0"
+                                                        },
+                                                        "surname": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scan retrieved successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden – scan does not belong to admin's company"
+                    },
+                    "404": {
+                        "description": "Scan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin Scans"
+                ],
+                "summary": "Delete a scan that belongs to the admin's company",
+                "operationId": "51800a76510b477c81e8a05dbca8f646",
+                "parameters": [
+                    {
+                        "name": "scan",
+                        "in": "path",
+                        "description": "ID of the scan to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 83
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scan deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scan deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden – scan does not belong to admin's company"
+                    },
+                    "404": {
+                        "description": "Scan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Admin Scans"
+                ],
+                "summary": "Update a scan's type or notes (only allowed fields are accepted)",
+                "operationId": "1e2347fc63ce3944a3492e8a69f95bc0",
+                "parameters": [
+                    {
+                        "name": "scan",
+                        "in": "path",
+                        "description": "ID of the scan to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 83
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "entrance",
+                                            "exit"
+                                        ],
+                                        "example": "exit"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Modified by admin",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Scan modified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 83
+                                                },
+                                                "badge_id": {
+                                                    "type": "string",
+                                                    "example": "85bdb85"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "exit"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "Modified by admin"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-03-30 00:51:44"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 41
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Davide2.0"
+                                                        },
+                                                        "surname": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scan modified successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden – scan does not belong to admin's company"
+                    },
+                    "422": {
+                        "description": "Validation error – invalid or unexpected fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid fields provided: badge_id"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/scans": {
+            "get": {
+                "tags": [
+                    "Admin Scans"
+                ],
+                "summary": "Get paginated scans for the admin's company",
+                "operationId": "685a2daf27d60fd559809dc613370cb3",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scans retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scans retrieved successfully."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Scan"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string",
+                                                    "example": "http://your-app.test/api/admin/scans?page=1"
+                                                },
+                                                "last": {
+                                                    "type": "string",
+                                                    "example": "http://your-app.test/api/admin/scans?page=5"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "example": "http://your-app.test/api/admin/scans?page=2",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "from": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "path": {
+                                                    "type": "string",
+                                                    "example": "http://your-app.test/api/admin/scans"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "to": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin Scans"
+                ],
+                "summary": "Manually create a scan for a user (admin-only)",
+                "operationId": "e71f5262103aa0f9f8ad33bae2cb788e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "type",
+                                    "notes"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 41
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "entrance",
+                                            "exit"
+                                        ],
+                                        "example": "entrance"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "manually added for hardware issue"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Scan created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 95
+                                                },
+                                                "badge_id": {
+                                                    "type": "string",
+                                                    "example": "85bdb85"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "entrance"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": "manually added for hardware issue"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-04-05 11:33:42"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 41
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Davide2.0"
+                                                        },
+                                                        "surname": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Scan created successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Unauthorized – user does not belong to admin's company",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error – user_id not found or missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The selected user id is invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The selected user id is invalid."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/my-scan": {
+            "get": {
+                "tags": [
+                    "Scans"
+                ],
+                "summary": "Get authenticated user's scans (entrance or exit)",
+                "operationId": "3926df16029a5b8942ee9c7c83ff8ff3",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by scan type (entrance or exit)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "entrance",
+                                "exit"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Start date for filtering (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "End date for filtering (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scans retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved"
+                                        },
+                                        "scans": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Scan"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/my-scan/{id}": {
+            "get": {
+                "tags": [
+                    "Scans"
+                ],
+                "summary": "Get a specific scan by ID (only if owned by the authenticated user)",
+                "operationId": "e20bff4c452a285db047c1892ff4df80",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the scan to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Scan retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data retrieved"
+                                        },
+                                        "scan": {
+                                            "$ref": "#/components/schemas/Scan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Scan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/log-scan": {
             "post": {
                 "tags": [
                     "Scans"
                 ],
                 "summary": "Log a scan (entrance or exit)",
-                "operationId": "d5ee2a2e39509efd3928b65c367e819d",
+                "operationId": "e870b402e1ec7e4e0b69890ead68220a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -75,7 +763,72 @@
             }
         }
     },
+    "components": {
+        "schemas": {
+            "Scan": {
+                "title": "Scan",
+                "description": "Represents a user scan event",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "badge_id": {
+                        "type": "string",
+                        "example": "ABC123XYZ"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "entrance",
+                            "exit"
+                        ],
+                        "example": "entrance"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Came in late",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-03-30 00:51:44"
+                    },
+                    "user": {
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "41"
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Mario"
+                            },
+                            "surname": {
+                                "type": "string",
+                                "example": "Rossi"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
     "tags": [
+        {
+            "name": "Admin Scans",
+            "description": "Admin Scans"
+        },
         {
             "name": "Scans",
             "description": "Scans"

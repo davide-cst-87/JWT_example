@@ -15,6 +15,13 @@ use OpenApi\Annotations as OA;
  *     url="http://localhost:8000",
  *     description="Local API Server"
  * )
+ *
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT"
+ * )
  */
 class OpenApi
 {

@@ -2,46 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ScanResource;
 use App\Models\Scan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ScanController extends Controller
 {
-    /**
-     * @OA\Post(
-     *     path="/api/log-scan",
-     *     summary="Log a scan (entrance or exit)",
-     *     tags={"Scans"},
-     *
-     *     @OA\RequestBody(
-     *         required=true,
-     *
-     *         @OA\JsonContent(
-     *             required={"badge_id", "type"},
-     *
-     *             @OA\Property(property="badge_id", type="string", example="ABC123"),
-     *             @OA\Property(property="type", type="string", enum={"entrance", "exit"}, example="entrance"),
-     *             @OA\Property(property="notes", type="string", example="Came in late"),
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=201,
-     *         description="Scan logged successfully",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="message", type="string", example="Scan logged successfully")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error"
-     *     )
-     * )
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -63,5 +31,60 @@ class ScanController extends Controller
         return response()->json([
             'message' => 'Scan logged successfully',
         ], 201);
+    }
+
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $query = Scan::where('user_id', $user->id)->with(['user:id,name,surname']);
+
+        // Optional filter by scan type
+        if ($request->has('type') && in_array($request->type, ['entrance', 'exit'])) {
+            $query->where('type', $request->type);
+        }
+
+        // Optional filter by date range
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $scans = $query->latest()->paginate(10);
+
+        // TODO Remember the colletrion should NOT be wrapped on response()=>json([...])
+        return ScanResource::collection($scans)->additional([
+            'message' => 'Scans retrieved successfully.',
+        ]);
+    }
+
+    public function show(string $id)
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $scan = Scan::where('id', $id)
+            ->where('user_id', $user->id)
+            ->with(['user:id,name,surname'])
+            ->first();
+
+        if (! $scan) {
+            return response()->json(['message' => 'Scan not found'], 404);
+        }
+
+        return response()->json([
+            'message' => 'Data retrieved',
+            'scan' => new ScanResource($scan),
+        ]);
     }
 }
