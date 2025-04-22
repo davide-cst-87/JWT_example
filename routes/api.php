@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminScanController;
 use App\Http\Controllers\API\AdminUserController;
+use App\Http\Controllers\API\TimeOffRequestController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InviteController;
@@ -41,7 +42,13 @@ Route::middleware(['auth:api'])->group(function () {
     // Admin Scan Controller
     Route::apiResource('admin/scans', AdminScanController::class);
 
+    // User Time Off Controller
+    // Route::apiResource('user/timeOff', TimeOffRequestController::class);
+
 });
+// TODO Add the token check
+// User Time Off Controller
+// Route::apiResource('user/timeOff', TimeOffRequestController::class);
 
 // TODO Implement the role admin to have a better security
 // Route::middleware(['auth:api', 'role:admin'])->prefix('admin')->group(function () {
