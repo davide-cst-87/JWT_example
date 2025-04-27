@@ -43,7 +43,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('admin/scans', AdminScanController::class);
 
     // User Time Off Controller
-    // Route::apiResource('user/timeOff', TimeOffRequestController::class);
+    Route::apiResource('user/timeOff', TimeOffRequestController::class);
 
 });
 // TODO Add the token check
