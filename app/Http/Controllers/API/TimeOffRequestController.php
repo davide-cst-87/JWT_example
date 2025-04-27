@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TimeOffRequestResource;
 use App\Models\TimeOffRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +26,13 @@ class TimeOffRequestController extends Controller
 
         $timeOff = $query->latest()->paginate(10);
 
-        return response()->json([
-            'message' => 'Data retrieved',
-            'timeOff' => $timeOff,
+        // return response()->json([
+        //     'message' => 'Data retrieved',
+        //     'timeOff' => $timeOff,
+        // ]);
+
+        return TimeOffRequestResource::collection($timeOff)->additional([
+            'message' => 'TimeOffRequest retiieved succefully',
         ]);
 
     }
