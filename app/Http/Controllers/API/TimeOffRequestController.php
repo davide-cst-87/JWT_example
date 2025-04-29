@@ -15,7 +15,7 @@ class TimeOffRequestController extends Controller
      */
     public function index(Request $request)
     {
-        // return 'Hello World';
+
         $user = Auth::user();
 
         if (! $user) {
@@ -24,15 +24,26 @@ class TimeOffRequestController extends Controller
 
         $query = TimeOffRequest::where('user_id', $user->id)->with(['user:id,name,surname']);
 
+        if ($request->filled('status') && in_array($request->status, ['approved', 'pending', 'rejected'])) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('type') && in_array($request->type, ['holiday', 'sickness', 'other'])) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('start_date', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', $request->start_date);
+        } elseif ($request->filled('end_date')) {
+            $query->whereDate('end_date', '>=', $request->end_date);
+        }
+
         $timeOff = $query->latest()->paginate(10);
 
-        // return response()->json([
-        //     'message' => 'Data retrieved',
-        //     'timeOff' => $timeOff,
-        // ]);
-
         return TimeOffRequestResource::collection($timeOff)->additional([
-            'message' => 'TimeOffRequest retiieved succefully',
+            'message' => 'Time off requests retrieved successfully.',
         ]);
 
     }
