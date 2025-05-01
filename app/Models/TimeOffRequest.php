@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Filters\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,4 +35,9 @@ class TimeOffRequest extends Model
     // {
     //     return $this->hasMany(TimeOffComment::class);
     // }
+
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
+        return $filters->apply($builder);
+    }
 }
