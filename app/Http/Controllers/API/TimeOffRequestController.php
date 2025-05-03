@@ -19,32 +19,9 @@ class TimeOffRequestController extends Controller
 
         $user = Auth::user();
 
-        if (! $user) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
-        }
-
-        // $query = TimeOffRequest::where('user_id', $user->id)->with(['user:id,name,surname']);
-
-        // if ($request->filled('status') && in_array($request->status, ['approved', 'pending', 'rejected'])) {
-        //     $query->where('status', $request->status);
-        // }
-
-        // if ($request->filled('type') && in_array($request->type, ['holiday', 'sickness', 'other'])) {
-        //     $query->where('type', $request->type);
-        // }
-
-        // if ($request->filled('start_date') && $request->filled('end_date')) {
-        //     $query->whereBetween('start_date', [$request->start_date, $request->end_date]);
-        // } elseif ($request->filled('start_date')) {
-        //     $query->whereDate('start_date', '>=', $request->start_date);
-        // } elseif ($request->filled('end_date')) {
-        //     $query->whereDate('end_date', '>=', $request->end_date);
-        // }
-
-        // $timeOff = $query->latest()->paginate(10);
-
+        // Below I have implemented the filters in a cleanear way to mantain the controller clean and sleak
+        // without using a bunch of if elif else statment
         $timeOff = TimeOffRequest::where('user_id', $user->id)
-            ->with(['user:id,name,surname'])
             ->filter($filters)
             ->latest()
             ->paginate(10);
