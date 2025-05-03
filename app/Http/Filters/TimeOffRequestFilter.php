@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TimeOffRequestFilter extends QueryFilter
 {
+    protected array $sortable = [
+        'type',
+        'status',
+        'created_at', // Add more allowed fields as needed
+    ];
+
     public function status($value)
     {
         if (in_array($value, ['approved', 'pending', 'rejected'])) {
@@ -34,6 +40,41 @@ class TimeOffRequestFilter extends QueryFilter
     {
         if (isset($value['start']) && isset($value['end'])) {
             return $this->builder->whereBetween('start_date', [$value['start'], $value['end']]);
+        }
+    }
+
+    protected function sort($value)
+    {
+
+        $sortAttributes = explode(',', $value);
+
+        foreach ($sortAttributes as $sortAttribute) {
+            $direction = 'asc';
+
+            if (strpos($sortAttribute, '-') === 0) {
+                $direction = 'desc';
+                $sortAttribute = substr($sortAttribute, 1);
+            }
+
+            if (! in_array($sortAttribute, $this->sortable)) {
+                continue;
+            }
+
+            // This code below exist becasue the sorting is using the index of the enum not the alphabetical order
+
+            if ($sortAttribute === 'status') {
+                return $this->builder->orderByRaw("
+                FIELD(status, 'approved','pending',  'rejected') ".($direction === 'desc' ? 'DESC' : 'ASC')
+                );
+            }
+
+            if ($sortAttribute === 'type') {
+                return $this->builder->orderByRaw("
+                FIELD(type, 'holiday','other','sickness') ".($direction === 'desc' ? 'DESC' : 'ASC')
+                );
+            }
+
+            $this->builder->orderBy($sortAttribute, $direction);
         }
     }
 }
