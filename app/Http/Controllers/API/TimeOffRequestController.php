@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\TimeOffRequestFilter;
+use App\Http\Requests\StoreTimeOffRequest;
 use App\Http\Resources\TimeOffRequestResource;
 use App\Models\TimeOffRequest;
 use Illuminate\Http\Request;
@@ -35,9 +36,26 @@ class TimeOffRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTimeOffRequest $request)
     {
-        //
+
+        $validated = $request->validated();
+
+        $timeOff = TimeOffRequest::create([
+            'user_id' => $request->user()->id,
+            'type' => $validated['type'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'note' => $validated['note'] ?? null,
+        ]);
+
+        $timeOff->refresh();
+
+        return response()->json([
+            'message' => 'Time off request created successfully.',
+            'data' => new TimeOffRequestResource($timeOff),
+        ], 201);
+
     }
 
     /**
