@@ -79,6 +79,20 @@ class TimeOffRequestController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $timeoff = TimeOffRequest::findOrFail($id);
+
+            // Check if the current user is the owner of the request
+            if ($timeoff->user_id !== auth()->id()) {
+                return response()->json(['message' => 'Unauthorized.'], 403);
+            }
+
+            $timeoff->delete();
+
+            return response()->json(['message' => 'Time Off Request successfully deleted'], 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Time Off Request cannot be found.'], 404);
+        }
     }
 }
