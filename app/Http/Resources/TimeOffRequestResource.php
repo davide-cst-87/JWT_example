@@ -22,7 +22,7 @@ class TimeOffRequestResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
 
-            $this->mergeWhen($request->routeIs('user.timeOff.show'), [
+            $this->mergeWhen($request->routeIs('timeOff.show'), [
                 'updated_at' => $this->updated_at->toDateTimeString(),
                 'note' => $this->note,
                 'approved_by' => $this->approvedBy ? [

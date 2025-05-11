@@ -63,7 +63,20 @@ class TimeOffRequestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $timeoff = TimeOffRequest::findOrFail($id);
+
+            if ($timeoff->user_id !== auth()->id()) {
+                return response()->json(['message' => 'Unauthorized.'], 403);
+            }
+
+            return new TimeOffRequestResource($timeoff)->additional([
+                'message' => 'Time off request retrieved successfully.',
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
+            return response()->json(['message' => 'Time off request cannot be found.'], 404);
+        }
     }
 
     /**
