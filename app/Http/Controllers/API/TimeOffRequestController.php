@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\TimeOffRequestFilter;
 use App\Http\Requests\StoreTimeOffRequest;
+use App\Http\Requests\UpdateTimeOffRequest;
 use App\Http\Resources\TimeOffRequestResource;
 use App\Models\TimeOffRequest;
 use Illuminate\Http\Request;
@@ -82,9 +83,31 @@ class TimeOffRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTimeOffRequest $request, $id)
     {
-        //
+        try {
+            $timeoff = TimeOffRequest::findOrFail($id);
+
+            // Make sure the logged-in user is the owner
+            if ($timeoff->user_id !== auth()->id()) {
+                return response()->json(['message' => 'Unauthorized.'], 403);
+            }
+
+            // Ensure start date hasn't already passed
+            if ($timeoff->start_date < now()->startOfDay()) {
+                return response()->json(['message' => 'You cannot update a request that has already started.'], 403);
+            }
+
+            // Update with safe, mapped attributes
+            $timeoff->update($request->mappedAttributes());
+
+            return new TimeOffRequestResource($timeoff->fresh())->additional([
+                'message' => 'Time off request updated successfully.',
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Time off request not found.'], 404);
+        }
     }
 
     /**
