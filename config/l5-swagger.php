@@ -48,6 +48,7 @@ return [
                     base_path('app/Http/Controllers'), // only scan this
                     base_path('app/Swagger'),          // and this
                     base_path('app/Swagger/Docs'),
+                    base_path('app/Swagger/Schemas'),
                 ],
             ],
         ],

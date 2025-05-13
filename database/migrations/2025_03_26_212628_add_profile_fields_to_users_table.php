@@ -12,10 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('surname')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->string('badge_id')->nullable();
-            $table->string('image')->nullable();
+            if (! Schema::hasColumn('users', 'surname')) {
+                $table->string('surname')->nullable();
+            }
+
+            if (! Schema::hasColumn('users', 'phone_number')) {
+                $table->string('phone_number')->nullable();
+            }
+
+            if (! Schema::hasColumn('users', 'badge_id')) {
+                $table->string('badge_id')->nullable();
+            }
+
+            if (! Schema::hasColumn('users', 'image')) {
+                $table->string('iamge')->nullable();
+            }
         });
     }
 

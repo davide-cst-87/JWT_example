@@ -78,6 +78,7 @@ class AdminScanController extends Controller
      */
     public function update(Request $request, Scan $scan)
     {
+        // TODO Check if the model binding is handling properly the errors like: "the scan id  is not present into the DB"
         $response = $this->authorizeScan($scan);
         if ($response) {
             return $response;
@@ -137,7 +138,7 @@ class AdminScanController extends Controller
         if (! $admin) {
             abort(401, 'Unauthenticated.');
         }
-
+        // TODO Here should be checked if is the same company id and if is admin ( not sure about that becasue i'm writing this comment months later after the code was written)
         if ($scan->user->company_id !== $admin->company_id) {
             return response()->json([
                 'message' => 'You do not have permission to access this scan.',

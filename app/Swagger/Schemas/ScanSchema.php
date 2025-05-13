@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Swagger;
+namespace App\Swagger\Schemas;
 
 use OpenApi\Annotations as OA;
 
