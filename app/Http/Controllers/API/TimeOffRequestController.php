@@ -83,6 +83,8 @@ class TimeOffRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // TODO The update method should not allow user change the request if the request is approved
+    // only if is in pending
     public function update(UpdateTimeOffRequest $request, $id)
     {
         try {
@@ -113,6 +115,7 @@ class TimeOffRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    // TODO This method should not be used if the request is already started or finished
     public function destroy(string $id)
     {
         try {
