@@ -139,6 +139,23 @@ class AdminScanController extends Controller
             abort(401, 'Unauthenticated.');
         }
         // TODO Here should be checked if is the same company id and if is admin ( not sure about that becasue i'm writing this comment months later after the code was written)
+
+        //
+        // if (! $admin) {
+        //     abort(401, 'Unauthenticated.');
+        // }
+
+        // if (! $admin->hasRole('company-admin')) {
+        //     return response()->json([
+        //         'message' => 'Only admins can access this resource.',
+        //     ], 403);
+        // }
+
+        // if ($scan->user->company_id !== $admin->company_id) {
+        //     return response()->json([
+        //         'message' => 'You do not have permission to access this scan.',
+        //     ], 403);
+        // }
         if ($scan->user->company_id !== $admin->company_id) {
             return response()->json([
                 'message' => 'You do not have permission to access this scan.',

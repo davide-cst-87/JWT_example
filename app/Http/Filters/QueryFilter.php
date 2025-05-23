@@ -4,6 +4,7 @@ namespace App\Http\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 abstract class QueryFilter
 {
@@ -23,6 +24,10 @@ abstract class QueryFilter
         foreach ($this->request->all() as $key => $value) {
             if (method_exists($this, $key)) {
                 $this->$key($value);
+            } else {
+                throw ValidationException::withMessages([
+                    $key => ["Unknown filter: $key"],
+                ]);
             }
         }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminScanController;
+use App\Http\Controllers\API\AdminTimeOffRequestController;
 use App\Http\Controllers\API\AdminUserController;
 use App\Http\Controllers\API\TimeOffRequestController;
 use App\Http\Controllers\API\UserController;
@@ -44,6 +45,8 @@ Route::middleware(['auth:api'])->group(function () {
 
     // User Time Off Controller
     Route::apiResource('user/timeOff', TimeOffRequestController::class);
+
+    Route::apiResource('admin/timeOff', AdminTimeOffRequestController::class);
 
 });
 // TODO Add the token check

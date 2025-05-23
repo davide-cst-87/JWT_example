@@ -22,14 +22,23 @@ class TimeOffRequestResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
 
+            'user' => $this->whenLoaded('user', function () {
+                return [
+                    'id' => $this->user->id,
+                    'name' => $this->user->name,
+                    'surname' => $this->user->surname,
+                    'email' => $this->user->email,
+                ];
+            }),
+
             $this->mergeWhen($request->routeIs('timeOff.show'), [
-                'updated_at' => $this->updated_at->toDateTimeString(),
-                'note' => $this->note,
-                'approved_by' => $this->approvedBy ? [
-                    'id' => $this->approvedBy->id,
-                    'name' => $this->approvedBy->name,
-                ] : null,
-            ]),
+                    'updated_at' => $this->updated_at->toDateTimeString(),
+                    'note' => $this->note,
+                    'approved_by' => $this->approvedBy ? [
+                        'id' => $this->approvedBy->id,
+                        'name' => $this->approvedBy->name,
+                    ] : null,
+                ]),
 
         ];
     }
