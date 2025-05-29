@@ -3,6 +3,7 @@
 namespace App\Http\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 
 class AdminTimeOffRequestFilter extends QueryFilter
 {
@@ -17,6 +18,10 @@ class AdminTimeOffRequestFilter extends QueryFilter
     {
         if (in_array($value, ['approved', 'pending', 'rejected'])) {
             return $this->builder->where('status', $value);
+        } else {
+            throw ValidationException::withMessages([
+                'status' => ['Invalid status. Allowed values: approved, pending, rejected.'],
+            ]);
         }
     }
 
@@ -24,24 +29,49 @@ class AdminTimeOffRequestFilter extends QueryFilter
     {
         if (in_array($value, ['holiday', 'sickness', 'other'])) {
             return $this->builder->where('type', $value);
+        } else {
+            throw ValidationException::withMessages([
+                'type' => ['Invalid type. Allowed values: holiday, sickness, other'],
+            ]);
         }
     }
 
     public function start_date($value)
     {
+        if (! $this->isValidDate($value)) {
+            throw ValidationException::withMessages([
+                'start_date' => ['Invalid start_date. Must be a valid date (YYYY-MM-DD).'],
+            ]);
+        }
+
         return $this->builder->whereDate('start_date', '>=', $value);
     }
 
     public function end_date($value)
     {
+        if (! $this->isValidDate($value)) {
+            throw ValidationException::withMessages([
+                'end_date' => ['Invalid end_date. Must be a valid date (YYYY-MM-DD).'],
+            ]);
+        }
+
         return $this->builder->whereDate('end_date', '<=', $value);
     }
 
     public function date_range($value)
     {
-        if (isset($value['start']) && isset($value['end'])) {
-            return $this->builder->whereBetween('start_date', [$value['start'], $value['end']]);
+        if (
+            ! is_array($value) ||
+            ! isset($value['start'], $value['end']) ||
+            ! $this->isValidDate($value['start']) ||
+            ! $this->isValidDate($value['end'])
+        ) {
+            throw ValidationException::withMessages([
+                'date_range' => ['Invalid date_range. Must include valid start and end dates.'],
+            ]);
         }
+
+        return $this->builder->whereBetween('start_date', [$value['start'], $value['end']]);
     }
 
     public function name($value): Builder
@@ -91,5 +121,13 @@ class AdminTimeOffRequestFilter extends QueryFilter
 
             $this->builder->orderBy($sortAttribute, $direction);
         }
+    }
+
+    protected function isValidDate($value): bool
+    {
+        $date = \DateTime::createFromFormat('Y-m-d', $value);
+
+        // This last bit is checking if the date created from the string has the right format to avoid sample2025-16-45
+        return $date && $date->format('Y-m-d') === $value;
     }
 }
