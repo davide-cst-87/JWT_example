@@ -139,6 +139,7 @@ class AdminScanController extends Controller
             abort(401, 'Unauthenticated.');
         }
         // TODO Here should be checked if is the same company id and if is admin ( not sure about that becasue i'm writing this comment months later after the code was written)
+        // Look at the traits that i have add AdminAuthorization
 
         //
         // if (! $admin) {

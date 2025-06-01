@@ -83,6 +83,21 @@ class AdminTimeOffRequestController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $admin = $this->ensureCompanyAdmin();
+
+        $timeOff = TimeOffRequest::where('id', $id)
+            ->whereHas('user', function ($query) use ($admin) {
+                $query->where('company_id', $admin->company_id);
+            })
+            ->first();
+
+        if (! $timeOff) {
+            return response()->json(['message' => 'Time Off Request not found or unauthorized.'], 404);
+        }
+
+        $timeOff->delete(); // Soft delete
+
+        return response()->json(['message' => 'Time Off Request deleted successfully']);
+
     }
 }
